@@ -12,6 +12,12 @@ import Firebase
 
 extension FeedController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    func resetStatus() {
+        self.statusTextfield.text = statusPlaceholder
+        self.statusTextfield.textColor = UIColor.lightGrayColor()
+        self.statusTextHeightConstraint?.constant = 53.0
+    }
+    
     func handlePost() {
         
         hideKeyboard()
@@ -19,7 +25,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         postButton.enabled = false
         photoButton.enabled = false
         
-        if statusTextfield.text?.characters.count == 0 {
+        if statusTextfield.text?.characters.count == 0 || statusTextfield.textColor == UIColor.lightGrayColor() {
             postButton.enabled = true
             photoButton.enabled = true
             print("Invalid post.")
@@ -69,11 +75,10 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                         
                                         self.progressBar.hidden = true
                                         
-                                        self.statusTextfield.text = ""
+                                        self.resetStatus()
                                         
                                         self.removePhoto()
                                         
-                                        self.statusTextHeightConstraint?.constant = 53.0
                                     }
                                 }
                             }
@@ -118,9 +123,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                             return
                         }
                         
-                        self.statusTextfield.text = ""
-                        
-                        self.statusTextHeightConstraint?.constant = 53.0
+                        self.resetStatus()
                     }
                 }
             }

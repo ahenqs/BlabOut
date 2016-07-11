@@ -11,6 +11,8 @@ import Firebase
 
 private let reuseIdentifier = "Cell"
 
+let statusPlaceholder = "What's happening?"
+
 class FeedController: UICollectionViewController {
     
     let limitNumberOfBlabs = UInt(10)
@@ -45,6 +47,8 @@ class FeedController: UICollectionViewController {
         textfield.backgroundColor = UIColor.whiteColor()
         textfield.autocorrectionType = .No
         textfield.delegate = self
+        textfield.text = statusPlaceholder
+        textfield.textColor = UIColor.lightGrayColor()
         return textfield
     }()
     
@@ -353,5 +357,20 @@ extension FeedController: UITextViewDelegate {
         let newHeight = (statusTextHeightConstraint?.constant)! + diff
         
         statusTextHeightConstraint?.constant = newHeight > 53.0 ? newHeight > 150.0 ? 150.0 : newHeight : 53.0
+    }
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        
+        if textView.textColor == UIColor.lightGrayColor() {
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textViewDidEndEditing(textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = statusPlaceholder
+            textView.textColor = UIColor.lightGrayColor()
+        }
     }
 }

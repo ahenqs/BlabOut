@@ -27,6 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UIBarButtonItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.lighterGrayColor(), NSFontAttributeName: Font.navigationBarButton], forState: .Normal)
         
+        UIProgressView.appearance().tintColor = UIColor.appOrange()
+        
         let tabBarController = TabBarController()
         window?.rootViewController = tabBarController
         
