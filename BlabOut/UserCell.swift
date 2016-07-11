@@ -37,6 +37,9 @@ class UserCell: UITableViewCell {
     
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.separatorInset = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
+        self.layoutMargins = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
+        
         setupViews()
     }
     

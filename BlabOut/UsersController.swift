@@ -28,6 +28,9 @@ class UsersController: UITableViewController {
         
         self.title = "Users"
         
+        self.tableView.separatorInset = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
+        self.tableView.layoutMargins = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
+        
         tableView.registerClass(UserCell.self, forCellReuseIdentifier: cellID)
         
         loadUsers()
