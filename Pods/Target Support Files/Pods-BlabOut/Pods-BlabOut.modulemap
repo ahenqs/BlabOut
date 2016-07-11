@@ -1,0 +1,6 @@
+framework module Pods_BlabOut {
+  umbrella header "Pods-BlabOut-umbrella.h"
+
+  export *
+  module * { export * }
+}
