@@ -7,19 +7,49 @@
 //
 
 import UIKit
+import Firebase
 
 class TimelineController: FeedController {
 
+    var follows = [UserUID]()
+    
+    lazy var followReference: FIRDatabaseReference = {
+        return FIRDatabase.database().reference().child("users")
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     override func viewWillAppear(animated: Bool) {
-        
-        loadFeed()
+        loadFollows()
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
+    }
+    
+    func loadFollows() {
+        
+        if let currentUID = FIRAuth.auth()?.currentUser?.uid {
+            
+            followReference.child(currentUID).child("feed").queryOrderedByChild("timestamp").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                
+                var newBlabs = [Blab]()
+                
+                for blab in snapshot.children {
+                    let blabObject = Blab(snapshot: blab as! FIRDataSnapshot)
+                    newBlabs.append(blabObject)
+                }
+                
+                self.blabs = newBlabs.reverse()
+                
+                
+                }, withCancelBlock: { (error) in
+                    
+                    print("Error: \(error.localizedDescription)")
+                    return
+            })
+        }
     }
 }

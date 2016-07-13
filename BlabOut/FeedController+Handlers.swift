@@ -65,6 +65,8 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                     
                                     self.blabReference.childByAutoId().updateChildValues(blab.toAnyObject()) { (error, reference) in
                                         
+                                        let blabID = reference.key
+                                        
                                         self.postButton.enabled = true
                                         self.photoButton.enabled = true
                                         
@@ -73,12 +75,61 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                             return
                                         }
                                         
-                                        self.progressBar.hidden = true
+                                        let currentUID = FIRAuth.auth()?.currentUser?.uid
                                         
-                                        self.resetStatus()
+                                        //update my feed with my blab
                                         
-                                        self.removePhoto()
-                                        
+                                        self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
+                                            
+                                            if err1 != nil {
+                                                print("Error: \(err1?.localizedDescription)")
+                                                return
+                                            }
+                                            
+                                            // TODO: update followers' feeds
+                                            
+                                            self.userReference.child(currentUID!).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                                                
+                                                var followers = [UserUID]()
+                                                
+                                                if shot.childrenCount > 0 {
+                                                    
+                                                    let c = Connection(snapshot: shot)
+                                                    
+                                                    followers = c.users
+                                                    
+                                                    if followers.count > 0 {
+                                                        
+                                                        for UID in followers {
+                                                            
+                                                            self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
+                                                                
+                                                                if err != nil {
+                                                                    print("Error: \(err?.localizedDescription)")
+                                                                    return
+                                                                }
+                                                                
+                                                                self.progressBar.hidden = true
+                                                                
+                                                                self.resetStatus()
+                                                                
+                                                                self.removePhoto()
+                                                            })
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                } else {
+                                                    self.progressBar.hidden = true
+                                                    
+                                                    self.resetStatus()
+                                                    
+                                                    self.removePhoto()
+                                                }
+                                                
+                                            })
+                                            
+                                        })
                                     }
                                 }
                             }
@@ -99,7 +150,6 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                         // Upload reported progress
                         if let progress = snapshot.progress {
                             let percentComplete = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
-                            print("Progress: \(percentComplete)%...")
                             
                             self.progressBar.setProgress(percentComplete, animated: true)
                             
@@ -123,7 +173,55 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                             return
                         }
                         
-                        self.resetStatus()
+                        let blabID = reference.key
+                        
+                        let currentUID = FIRAuth.auth()?.currentUser?.uid
+                        
+                        //update my feed with my blab
+                        
+                        self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
+                            
+                            if err1 != nil {
+                                print("Error: \(err1?.localizedDescription)")
+                                return
+                            }
+                            
+                            // TODO: update followers' feeds
+                            
+                            self.userReference.child(currentUID!).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                                
+                                var followers = [UserUID]()
+                                
+                                if shot.childrenCount > 0 {
+                                    
+                                    let c = Connection(snapshot: shot)
+                                    
+                                    followers = c.users
+                                    
+                                    if followers.count > 0 {
+                                        
+                                        for UID in followers {
+                                            
+                                            self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
+                                                
+                                                if err != nil {
+                                                    print("Error: \(err?.localizedDescription)")
+                                                    return
+                                                }
+                                                
+                                                self.resetStatus()
+                                            })
+                                            
+                                        }
+                                        
+                                    }
+                                } else {
+                                    self.resetStatus()
+                                }
+                                
+                            })
+                            
+                        })
                     }
                 }
             }
