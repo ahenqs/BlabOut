@@ -13,7 +13,10 @@ private let reuseIdentifier = "Cell"
 
 let statusPlaceholder = "What's happening?"
 
-class FeedController: UICollectionViewController {
+public let oopsTitle = "Oops!"
+public let okTitle = "OK"
+
+class FeedController: UICollectionViewController, AlertMessage {
     
     let limitNumberOfBlabs = UInt(10)
     
@@ -184,7 +187,7 @@ class FeedController: UICollectionViewController {
             presentViewController(loginController, animated: true, completion: nil)
             
         } catch let error as NSError {
-            print("Error: \(error.localizedDescription)")
+            showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
         }
     }
     

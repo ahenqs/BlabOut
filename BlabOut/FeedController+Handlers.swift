@@ -28,14 +28,18 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         if statusTextfield.text?.characters.count == 0 || statusTextfield.textColor == UIColor.lightGrayColor() {
             postButton.enabled = true
             photoButton.enabled = true
-            print("Invalid post.")
+            
+            showAlert(viewController: self, title: oopsTitle, message: "Invalid data to post.", buttonTitle: okTitle)
+            
             return
         }
         
         guard let status = statusTextfield.text else {
             postButton.enabled = true
             photoButton.enabled = true
-            print("Invalid post.")
+            
+            showAlert(viewController: self, title: oopsTitle, message: "Invalid data to post.", buttonTitle: okTitle)
+            
             return
         }
         
@@ -71,7 +75,8 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                         self.photoButton.enabled = true
                                         
                                         if error != nil {
-                                            print("Error: \(error?.localizedDescription)")
+                                            self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
+                                            
                                             return
                                         }
                                         
@@ -82,7 +87,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                         self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
                                             
                                             if err1 != nil {
-                                                print("Error: \(err1?.localizedDescription)")
+                                                self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
                                                 return
                                             }
                                             
@@ -105,7 +110,8 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                                             self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
                                                                 
                                                                 if err != nil {
-                                                                    print("Error: \(err?.localizedDescription)")
+                                                                    
+                                                                    self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
                                                                     return
                                                                 }
                                                                 
@@ -140,7 +146,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                             self.photoButton.enabled = true
                             
                             //no image due to error upload
-                            print("Error: \(error?.localizedDescription)")
+                            self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                             return
                         }
                     })
@@ -169,7 +175,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                         self.photoButton.enabled = true
                         
                         if error != nil {
-                            print("Error: \(error?.localizedDescription)")
+                            self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                             return
                         }
                         
@@ -182,7 +188,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                         self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
                             
                             if err1 != nil {
-                                print("Error: \(err1?.localizedDescription)")
+                                self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
                                 return
                             }
                             
@@ -205,7 +211,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                                             self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
                                                 
                                                 if err != nil {
-                                                    print("Error: \(err?.localizedDescription)")
+                                                    self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
                                                     return
                                                 }
                                                 

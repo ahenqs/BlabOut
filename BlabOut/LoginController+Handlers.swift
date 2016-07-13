@@ -56,7 +56,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         guard let email = emailTextfield.text, password = passwordTextfield.text else {
             
             // TODO: Show message with error
-            print("Invalid form.")
+            showAlert(viewController: self, title: oopsTitle, message: "All fields required.", buttonTitle: okTitle)
+            
             return
         }
         
@@ -67,7 +68,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             UIApplication.sharedApplication().endIgnoringInteractionEvents()
             
             if error != nil {
-                print("Error: \(error?.localizedDescription)")
+                self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                 return
             }
             
@@ -81,7 +82,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         if (nameTextfield.text?.characters.count == 0 || emailTextfield.text?.characters.count == 0 || passwordTextfield.text?.characters.count == 0) {
             
             // TODO: Show message with error
-            print("Invalid form.")
+            showAlert(viewController: self, title: oopsTitle, message: "All fields required.", buttonTitle: okTitle)
             return
         }
         
@@ -104,8 +105,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         
             guard let name = self.nameTextfield.text, email = self.emailTextfield.text, password = self.passwordTextfield.text else {
                 
-                // TODO: Show message with error
-                print("Invalid form.")
+                self.showAlert(viewController: self, title: oopsTitle, message: "All fields required.", buttonTitle: okTitle)
                 return
             }
             
@@ -117,7 +117,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 if error != nil {
                     
                     UIApplication.sharedApplication().endIgnoringInteractionEvents()
-                    print("Error: \(error?.localizedDescription)")
+                    self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                     return
                 }
                 
@@ -144,7 +144,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         guard let name = nameTextfield.text, email = emailTextfield.text, password = passwordTextfield.text else {
             
             // TODO: Show message with error
-            print("Invalid form.")
+            showAlert(viewController: self, title: oopsTitle, message: "All fields required.", buttonTitle: okTitle)
             return
         }
         
@@ -167,13 +167,11 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         FIRAuth.auth()?.createUserWithEmail(email, password: password, completion: { (user, error) in
             
             if error != nil {
-                print("Error: \(error?.localizedDescription)")
+                self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                 return
             }
             
             //create user with profile picture
-            print(user)
-            
             if let uid = user?.uid {
                 
                 if self.profileImageView.image != UIImage(named: "user") {
@@ -235,7 +233,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         self.userReference.child(user.uid).updateChildValues(user.toAnyObject(), withCompletionBlock: { (error, reference) in
             
             if error != nil {
-                print("Error: \(error?.localizedDescription)")
+                self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                 return
             }
             

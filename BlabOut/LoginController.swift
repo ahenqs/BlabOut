@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginController: UIViewController {
+class LoginController: UIViewController, AlertMessage {
     
     lazy var userReference: FIRDatabaseReference = {
         FIRDatabase.database().reference().child("users")

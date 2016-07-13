@@ -47,7 +47,7 @@ class TimelineController: FeedController {
                 
                 }, withCancelBlock: { (error) in
                     
-                    print("Error: \(error.localizedDescription)")
+                    self.showAlert(viewController: self, title: oopsTitle, message: (error.localizedDescription), buttonTitle: okTitle)
                     return
             })
         }

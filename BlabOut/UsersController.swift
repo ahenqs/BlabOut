@@ -11,7 +11,7 @@ import Firebase
 
 let cellID = "UserCell"
 
-class UsersController: UITableViewController {
+class UsersController: UITableViewController, AlertMessage {
     
     var users = [User]() {
         didSet {
@@ -72,7 +72,7 @@ class UsersController: UITableViewController {
                 
                 }, withCancelBlock: { (error) in
                     
-                    print("Error: \(error.localizedDescription)")
+                    self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                     return
             })
         }
@@ -99,7 +99,8 @@ class UsersController: UITableViewController {
             self.users = newUsers
             
             }) { (error) in
-                print("Error: \(error.localizedDescription)")
+                self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
+                
                 return
         }
         
@@ -174,7 +175,7 @@ extension UsersController: UserControllerDelegate {
             userReference.child(currentUID).updateChildValues(["following": following], withCompletionBlock: { (error, reference) in
                 
                 if error != nil {
-                    print("Error: \(error?.localizedDescription)")
+                    self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                     return
                 }
                 
@@ -183,7 +184,7 @@ extension UsersController: UserControllerDelegate {
                 self.userReference.child(currentUID).child("feed").observeSingleEventOfType(.Value, withBlock: { (snpt) in
                     
                     if error != nil {
-                        print("Error: \(error?.localizedDescription)")
+                        self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                         return
                     }
                     
@@ -209,7 +210,7 @@ extension UsersController: UserControllerDelegate {
                         self.blabReference.queryOrderedByChild("user/uid").queryEqualToValue(user.uid).observeSingleEventOfType(.Value, withBlock: { (snpt) in
                             
                             if error != nil {
-                                print("Error: \(error?.localizedDescription)")
+                                self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                 return
                             }
                             
@@ -223,7 +224,7 @@ extension UsersController: UserControllerDelegate {
                                 
                                 
                                 if error != nil {
-                                    print("Error: \(error?.localizedDescription)")
+                                    self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                     return
                                 }
                                 
@@ -255,7 +256,7 @@ extension UsersController: UserControllerDelegate {
                                         self.userReference.child(user.uid).updateChildValues(["followers": followers], withCompletionBlock: { (error, reference) in
                                         
                                             if error != nil {
-                                                print("Error: \(error?.localizedDescription)")
+                                                self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                                 return
                                             }
                                             
@@ -270,7 +271,7 @@ extension UsersController: UserControllerDelegate {
                                         self.userReference.child(user.uid).updateChildValues(["followers": followers], withCompletionBlock: { (error, reference) in
                                             
                                             if error != nil {
-                                                print("Error: \(error?.localizedDescription)")
+                                                self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                                 return
                                             }
                                             
@@ -281,7 +282,7 @@ extension UsersController: UserControllerDelegate {
                                     
                                     }, withCancelBlock: { (error) in
                                         
-                                        print("Error: \(error.localizedDescription)")
+                                        self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                                         return
                                 })
                                 
@@ -295,7 +296,7 @@ extension UsersController: UserControllerDelegate {
                             
                             
                             if error != nil {
-                                print("Error: \(error?.localizedDescription)")
+                                self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                 return
                             }
                             
@@ -337,7 +338,7 @@ extension UsersController: UserControllerDelegate {
                                     self.userReference.child(user.uid).updateChildValues(["followers": followers], withCompletionBlock: { (error, reference) in
                                         
                                         if error != nil {
-                                            print("Error: \(error?.localizedDescription)")
+                                            self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                             return
                                         }
                                         
@@ -349,7 +350,7 @@ extension UsersController: UserControllerDelegate {
                                     self.userReference.child(user.uid).child("followers").removeValueWithCompletionBlock({ (error, ref) in
                                         
                                         if error != nil {
-                                            print("Error: \(error?.localizedDescription)")
+                                            self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
                                             return
                                         }
                                         
@@ -360,7 +361,7 @@ extension UsersController: UserControllerDelegate {
                                 
                                 }, withCancelBlock: { (error) in
                                     
-                                    print("Error: \(error.localizedDescription)")
+                                    self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                                     return
                             })
                             
