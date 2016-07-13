@@ -14,7 +14,12 @@ class UserCell: UITableViewCell {
     
     var user: User? {
         didSet {
-            photoImageView.loadImageUsingCacheWithUrlString((user?.profileImageURL)!)
+            if user?.profileImageURL != "" {
+                photoImageView.loadImageUsingCacheWithUrlString((user?.profileImageURL)!)
+            } else {
+                photoImageView.image = UIImage(named: "user")
+            }
+            
             usernameLabel.text = user?.name
         }
     }
@@ -33,7 +38,7 @@ class UserCell: UITableViewCell {
     
     let photoImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .ScaleAspectFit
+        view.contentMode = .ScaleAspectFill
         view.layer.cornerRadius = 20.0
         view.layer.masksToBounds = true
         view.image = UIImage(named: "user")
