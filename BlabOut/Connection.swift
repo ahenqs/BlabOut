@@ -25,12 +25,14 @@ struct Connection: Mappable {
     init(snapshot: FIRDataSnapshot) {
         
         let total = snapshot.value!.count
+
+        let arr = snapshot.value as! NSArray
         
         var array = [UserUID]()
         
         for i in 0..<total {
             
-            if let s = snapshot.value![i] as? String {
+            if let s: String = arr[i] as? String {
                 array.append(s)
             }
         }
