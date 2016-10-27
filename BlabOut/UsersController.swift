@@ -30,17 +30,17 @@ class UsersController: UITableViewController, AlertMessage {
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        navigationController?.navigationBar.barStyle = .BlackTranslucent
+        navigationController?.navigationBar.barStyle = .blackTranslucent
         
         self.title = "Users"
         
         self.tableView.separatorInset = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
         self.tableView.layoutMargins = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
         
-        tableView.registerClass(UserCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         following = [UserUID]()
@@ -48,8 +48,8 @@ class UsersController: UITableViewController, AlertMessage {
         loadFollows()
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     // MARK: Data
@@ -58,7 +58,7 @@ class UsersController: UITableViewController, AlertMessage {
         
         if let currentUID = FIRAuth.auth()?.currentUser?.uid {
             
-            userReference.child(currentUID).child("following").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            userReference.child(currentUID).child("following").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 
                 if snapshot.childrenCount > 0 {
@@ -70,7 +70,7 @@ class UsersController: UITableViewController, AlertMessage {
                 
                 self.loadUsers()
                 
-                }, withCancelBlock: { (error) in
+                }, withCancel: { (error) in
                     
                     self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                     return
@@ -80,7 +80,7 @@ class UsersController: UITableViewController, AlertMessage {
     
     func loadUsers() {
         
-        userReference.queryOrderedByChild("name").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+        userReference.queryOrdered(byChild: "name").observeSingleEvent(of: .value, with: { (snapshot) in
             
             var newUsers = [User]()
             
@@ -107,25 +107,25 @@ class UsersController: UITableViewController, AlertMessage {
     }
     
     // MARK: Table View
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellID, forIndexPath: indexPath) as! UserCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
         
-        let user = users[indexPath.row]
+        let user = users[(indexPath as NSIndexPath).row]
         
         cell.user = user
         
         cell.delegate = self
         
-        if following.contains(users[indexPath.row].uid) {
+        if following.contains(users[(indexPath as NSIndexPath).row].uid) {
             cell.hasFollowed = true
         } else {
             cell.hasFollowed = false
@@ -134,18 +134,18 @@ class UsersController: UITableViewController, AlertMessage {
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50.0
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }
 }
 
 extension UsersController: UserControllerDelegate {
     
-    func didTapActionButton(user: User, sender: UIButton) {
+    func didTapActionButton(_ user: User, sender: UIButton) {
         
         if let currentUID = FIRAuth.auth()?.currentUser?.uid {
             
@@ -159,7 +159,7 @@ extension UsersController: UserControllerDelegate {
                     let value = following[i]
                     
                     if value == user.uid {
-                        following.removeAtIndex(i)
+                        following.remove(at: i)
                         break
                     }
                 }
@@ -181,7 +181,7 @@ extension UsersController: UserControllerDelegate {
                 
                 //get my feed
                 
-                self.userReference.child(currentUID).child("feed").observeSingleEventOfType(.Value, withBlock: { (snpt) in
+                self.userReference.child(currentUID).child("feed").observeSingleEvent(of: .value, with: { (snpt) in
                     
                     if error != nil {
                         self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
@@ -196,18 +196,18 @@ extension UsersController: UserControllerDelegate {
                         if (hasRemoved){
                             
                             if blabObject.user?.uid != user.uid {
-                                myFeed[blabObject.key] = blabObject.toAnyObject()
+                                myFeed[blabObject.key] = blabObject.toAnyObject() as AnyObject?
                             }
                             
                         } else {
-                            myFeed[blabObject.key] = blabObject.toAnyObject()
+                            myFeed[blabObject.key] = blabObject.toAnyObject() as AnyObject?
                         }
                     }
                     
                     if (!hasRemoved) { //has followed
                     
                         //my friend's feed
-                        self.blabReference.queryOrderedByChild("user/uid").queryEqualToValue(user.uid).observeSingleEventOfType(.Value, withBlock: { (snpt) in
+                        self.blabReference.queryOrdered(byChild: "user/uid").queryEqual(toValue: user.uid).observeSingleEvent(of: .value, with: { (snpt) in
                             
                             if error != nil {
                                 self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
@@ -217,7 +217,7 @@ extension UsersController: UserControllerDelegate {
                             //merge feed
                             for blab in snpt.children {
                                 let blabObject = Blab(snapshot: blab as! FIRDataSnapshot)
-                                myFeed[blabObject.key] = blabObject.toAnyObject()
+                                myFeed[blabObject.key] = blabObject.toAnyObject() as AnyObject?
                             }
                             
                             self.userReference.child(currentUID).updateChildValues(["feed": myFeed], withCompletionBlock: { (error, reference) in
@@ -229,16 +229,16 @@ extension UsersController: UserControllerDelegate {
                                 }
                                 
                                 if hasRemoved {
-                                    sender.setTitle("Follow", forState: .Normal)
+                                    sender.setTitle("Follow", for: UIControlState())
                                     sender.backgroundColor = UIColor.appOrange()
                                 } else {
-                                    sender.setTitle("Unfollow", forState: .Normal)
-                                    sender.backgroundColor = UIColor.darkGrayColor()
+                                    sender.setTitle("Unfollow", for: UIControlState())
+                                    sender.backgroundColor = UIColor.darkGray
                                 }
                                 
                                 //update follower's list of followers - add follower
 
-                                self.userReference.child(user.uid).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                                self.userReference.child(user.uid).child("followers").observeSingleEvent(of: .value, with: { (shot) in
                                     
                                     var followers = [UserUID]()
                                     
@@ -280,7 +280,7 @@ extension UsersController: UserControllerDelegate {
                                         })
                                     }
                                     
-                                    }, withCancelBlock: { (error) in
+                                    }, withCancel: { (error) in
                                         
                                         self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                                         return
@@ -303,16 +303,16 @@ extension UsersController: UserControllerDelegate {
                             print("Success ˆˆ")
                             
                             if hasRemoved {
-                                sender.setTitle("Follow", forState: .Normal)
+                                sender.setTitle("Follow", for: UIControlState())
                                 sender.backgroundColor = UIColor.appOrange()
                             } else {
-                                sender.setTitle("Unfollow", forState: .Normal)
-                                sender.backgroundColor = UIColor.darkGrayColor()
+                                sender.setTitle("Unfollow", for: UIControlState())
+                                sender.backgroundColor = UIColor.darkGray
                             }
                             
                             //update follower's list of followers - remove follower
                             
-                            self.userReference.child(user.uid).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                            self.userReference.child(user.uid).child("followers").observeSingleEvent(of: .value, with: { (shot) in
                                 
                                 var followers = [UserUID]()
                                 
@@ -327,7 +327,7 @@ extension UsersController: UserControllerDelegate {
                                 if followers.contains(currentUID) {
                                     
                                     for i in 0..<followers.count {
-                                        followers.removeAtIndex(i)
+                                        followers.remove(at: i)
                                     }
                                 }
                                 
@@ -347,7 +347,7 @@ extension UsersController: UserControllerDelegate {
                                     })
                                 } else { //had last follower
                                     
-                                    self.userReference.child(user.uid).child("followers").removeValueWithCompletionBlock({ (error, ref) in
+                                    self.userReference.child(user.uid).child("followers").removeValue(completionBlock: { (error, ref) in
                                         
                                         if error != nil {
                                             self.showAlert(viewController: self, title: oopsTitle, message: error!.localizedDescription, buttonTitle: okTitle)
@@ -359,7 +359,7 @@ extension UsersController: UserControllerDelegate {
                                     })
                                 }
                                 
-                                }, withCancelBlock: { (error) in
+                                }, withCancel: { (error) in
                                     
                                     self.showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
                                     return

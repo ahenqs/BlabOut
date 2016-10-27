@@ -10,21 +10,21 @@ import Foundation
 import UIKit
 
 extension UIView {
-    func addConstraintWithFormat(format: String, views: UIView...) {
+    func addConstraintWithFormat(_ format: String, views: UIView...) {
         
         var viewsDictionary = [String: UIView]()
         
-        for (index, view) in views.enumerate() {
+        for (index, view) in views.enumerated() {
             let key = "v\(index)"
             viewsDictionary[key] = view
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
     
     func spacerView() -> UIView {
-        let view = UIView(frame: CGRectMake(0.0, 0.0, 10.0, self.frame.height))
+        let view = UIView(frame: CGRect(x: 0.0, y: 0.0, width: 10.0, height: self.frame.height))
         return view
     }
 }

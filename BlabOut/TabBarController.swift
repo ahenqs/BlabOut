@@ -33,7 +33,7 @@ class TabBarController: UITabBarController {
         self.viewControllers = controllers
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         self.selectedIndex = 1
     }

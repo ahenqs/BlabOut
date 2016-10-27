@@ -65,6 +65,7 @@
 		5385D4351D32D91D00BCDCFA /* TimelineController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineController.swift; sourceTree = "<group>"; };
 		53882B261D341941002EC935 /* UserControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserControllerDelegate.swift; sourceTree = "<group>"; };
 		53882B281D341B85002EC935 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		538E1CDC1DC21E6600F93EC9 /* BlabOut.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BlabOut.entitlements; sourceTree = "<group>"; };
 		5391D7E41D316D4D0065927A /* UIImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		5391D7E61D3180CB0065927A /* Blab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blab.swift; sourceTree = "<group>"; };
 		53C62FD41D31D82600522680 /* FeedController+Handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FeedController+Handlers.swift"; sourceTree = "<group>"; };
@@ -192,6 +193,7 @@
 		53F6594F1D2D4BD000B45314 /* BlabOut */ = {
 			isa = PBXGroup;
 			children = (
+				538E1CDC1DC21E6600F93EC9 /* BlabOut.entitlements */,
 				53F659501D2D4BD000B45314 /* AppDelegate.swift */,
 				53038F4F1D32974D00049664 /* Protocols */,
 				53525AD71D2D88C50050EC21 /* Model */,
@@ -287,14 +289,22 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "André Henrique da Silva";
 				TargetAttributes = {
 					53F6594C1D2D4BD000B45314 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 6X6HFEJA72;
+						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					53F659601D2D4BD000B45314 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 53F6594C1D2D4BD000B45314;
 					};
 				};
@@ -505,8 +515,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -550,8 +562,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -570,6 +584,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -579,11 +594,14 @@
 			baseConfigurationReference = 267F85A4BB397E435D7ADC6C /* Pods-BlabOut.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BlabOut/BlabOut.entitlements;
+				DEVELOPMENT_TEAM = 6X6HFEJA72;
 				INFOPLIST_FILE = BlabOut/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahenqs.BlabOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -592,11 +610,14 @@
 			baseConfigurationReference = 62B5A8EE797C54024DB605E1 /* Pods-BlabOut.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BlabOut/BlabOut.entitlements;
+				DEVELOPMENT_TEAM = 6X6HFEJA72;
 				INFOPLIST_FILE = BlabOut/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahenqs.BlabOut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -609,6 +630,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahenqs.BlabOutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BlabOut.app/BlabOut";
 			};
 			name = Debug;
@@ -622,6 +644,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahenqs.BlabOutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BlabOut.app/BlabOut";
 			};
 			name = Release;

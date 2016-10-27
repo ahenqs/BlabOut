@@ -10,18 +10,18 @@ import Foundation
 import UIKit
 
 protocol AlertMessage {
-    func showAlert(viewController viewController: UIViewController, title: String, message: String, buttonTitle: String)
+    func showAlert(viewController: UIViewController, title: String, message: String, buttonTitle: String)
 }
 
 extension AlertMessage {
-    func showAlert(viewController viewController: UIViewController, title: String, message: String, buttonTitle: String) {
+    func showAlert(viewController: UIViewController, title: String, message: String, buttonTitle: String) {
         
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: buttonTitle, style: .Default, handler: nil)
+        let okAction = UIAlertAction(title: buttonTitle, style: .default, handler: nil)
         
         alertController.addAction(okAction)
         
-        viewController.presentViewController(alertController, animated: true, completion: nil)
+        viewController.present(alertController, animated: true, completion: nil)
     }
 }

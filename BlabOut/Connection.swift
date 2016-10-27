@@ -12,8 +12,8 @@ import Firebase
 public typealias UserUID = String
 
 enum RelationType {
-    case Follows
-    case Followers
+    case follows
+    case followers
 }
 
 struct Connection: Mappable {
@@ -24,13 +24,13 @@ struct Connection: Mappable {
 
     init(snapshot: FIRDataSnapshot) {
         
-        let total = snapshot.value!.count
+        let total = (snapshot.value! as AnyObject).count
 
         let arr = snapshot.value as! NSArray
         
         var array = [UserUID]()
         
-        for i in 0..<total {
+        for i in 0..<total! {
             
             if let s: String = arr[i] as? String {
                 array.append(s)
@@ -42,6 +42,6 @@ struct Connection: Mappable {
     }
     
     func toAnyObject() -> [String : AnyObject] {
-        return ["users": users]
+        return ["users": users as AnyObject]
     }
 }

@@ -21,19 +21,19 @@ class TimelineController: FeedController {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         loadFollows()
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     func loadFollows() {
         
         if let currentUID = FIRAuth.auth()?.currentUser?.uid {
             
-            followReference.child(currentUID).child("feed").queryOrderedByChild("timestamp").observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            followReference.child(currentUID).child("feed").queryOrdered(byChild: "timestamp").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 var newBlabs = [Blab]()
                 
@@ -42,10 +42,10 @@ class TimelineController: FeedController {
                     newBlabs.append(blabObject)
                 }
                 
-                self.blabs = newBlabs.reverse()
+                self.blabs = newBlabs.reversed()
                 
                 
-                }, withCancelBlock: { (error) in
+                }, withCancel: { (error) in
                     
                     self.showAlert(viewController: self, title: oopsTitle, message: (error.localizedDescription), buttonTitle: okTitle)
                     return

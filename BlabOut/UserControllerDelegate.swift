@@ -10,5 +10,5 @@ import Foundation
 import UIKit
 
 protocol UserControllerDelegate: class {
-    func didTapActionButton(user: User, sender: UIButton)
+    func didTapActionButton(_ user: User, sender: UIButton)
 }

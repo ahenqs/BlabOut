@@ -27,7 +27,7 @@ extension UIColor {
 //        return UIColor(white: 0.95, alpha: 1.0)
 //    }
     
-    static func rgb(red red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1.0) -> UIColor {
+    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1.0) -> UIColor {
         return UIColor(red: red/255.0, green: green/255.0, blue: blue/255.0, alpha: alpha)
     }
     
@@ -36,7 +36,7 @@ extension UIColor {
     }
     
     public static func navigationBarTextColor() -> UIColor {
-        return UIColor.whiteColor()
+        return UIColor.white
     }
     
     public static func lighterGrayColor() -> UIColor {

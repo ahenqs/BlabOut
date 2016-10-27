@@ -22,7 +22,7 @@ struct Blab: Mappable {
     let itemReference: FIRDatabaseReference?
     let statusText: String
     let statusPhoto: String
-    let timestamp: NSDate?
+    let timestamp: Date?
     var user: User?
     let likes: Int
     
@@ -34,7 +34,7 @@ struct Blab: Mappable {
         
         self.statusText = text
         self.statusPhoto = photo
-        self.timestamp = NSDate()
+        self.timestamp = Date()
         self.user = usr
         self.likes = likes
     }
@@ -44,31 +44,31 @@ struct Blab: Mappable {
         self.key = snapshot.key
         self.itemReference = snapshot.ref
         
-        if let text = snapshot.value![kStatusText] as? String {
+        if let dict = snapshot.value! as? NSDictionary, let text = dict[kStatusText] as? String {
             self.statusText = text
         } else {
             self.statusText = ""
         }
         
-        if let photo = snapshot.value![kStatusPhoto] as? String {
+        if let dict = snapshot.value! as? NSDictionary, let photo = dict[kStatusPhoto] as? String {
             self.statusPhoto = photo
         } else {
             self.statusPhoto = ""
         }
         
-        if let time = snapshot.value![kTimestamp] as? Double {
-            self.timestamp = NSDate(timeIntervalSince1970: time)
+        if let dict = snapshot.value! as? NSDictionary, let time = dict[kTimestamp] as? Double {
+            self.timestamp = Date(timeIntervalSince1970: time)
         } else {
             self.timestamp = nil
         }
         
-        if let user = snapshot.value![kUser] as? [String: String] {
+        if let dict = snapshot.value! as? NSDictionary, let user = dict[kUser] as? [String: String] {
             self.user = User(uid: user[kUID]!, name: user[kName]!, imageURL: user[kProfileImageURL]!)
         } else {
             self.user = nil
         }
         
-        if let likes = snapshot.value![kLikes] as? Int {
+        if let dict = snapshot.value! as? NSDictionary, let likes = dict[kLikes] as? Int {
             self.likes = likes
         } else {
             self.likes = 0
@@ -77,7 +77,7 @@ struct Blab: Mappable {
     
     func toAnyObject() -> [String : AnyObject] {
         
-        return [kStatusText: self.statusText, kStatusPhoto: self.statusPhoto, kTimestamp: self.timestamp!.timeIntervalSince1970, kUser: (self.user?.toAnyObject())!, kLikes: NSNumber(int: Int32(self.likes))]
+        return [kStatusText: self.statusText as AnyObject, kStatusPhoto: self.statusPhoto as AnyObject, kTimestamp: self.timestamp!.timeIntervalSince1970 as AnyObject, kUser: (self.user?.toAnyObject())! as AnyObject, kLikes: NSNumber(value: Int32(self.likes) as Int32)]
     }
 }
 

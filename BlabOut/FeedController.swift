@@ -40,57 +40,57 @@ class FeedController: UICollectionViewController, AlertMessage {
     
     let postContentView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         return view
     }()
     
     lazy var statusTextfield: UITextView = {
         let textfield = UITextView()
         textfield.font = Font.textfield
-        textfield.backgroundColor = UIColor.whiteColor()
-        textfield.autocorrectionType = .No
+        textfield.backgroundColor = UIColor.white
+        textfield.autocorrectionType = .no
         textfield.delegate = self
         textfield.text = statusPlaceholder
-        textfield.textColor = UIColor.lightGrayColor()
+        textfield.textColor = UIColor.lightGray
         return textfield
     }()
     
     lazy var postButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("Post", forState: .Normal)
-        button.titleLabel?.font = UIFont.systemFontOfSize(14.0)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("Post", for: UIControlState())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14.0)
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.backgroundColor = UIColor.appBlue()
         button.layer.cornerRadius = 8.0
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(FeedController.handlePost), forControlEvents: .TouchUpInside)
-        button.enabled = false
+        button.addTarget(self, action: #selector(FeedController.handlePost), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
     
     lazy var photoButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("Photo", forState: .Normal)
-        button.titleLabel?.font = UIFont.systemFontOfSize(14.0)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("Photo", for: UIControlState())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14.0)
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.backgroundColor = UIColor.appOrange()
         button.layer.cornerRadius = 8.0
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(FeedController.togglePhotoButton), forControlEvents: .TouchUpInside)
-        button.enabled = false
+        button.addTarget(self, action: #selector(FeedController.togglePhotoButton), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
     
     let photoImageView: UIImageView = {
         let view = UIImageView()
-        view.hidden = true
+        view.isHidden = true
         return view
     }()
     
     let progressBar: UIProgressView = {
         let view = UIProgressView()
         view.progress = 0.0
-        view.hidden = true
+        view.isHidden = true
         return view
     }()
     
@@ -104,7 +104,7 @@ class FeedController: UICollectionViewController, AlertMessage {
 //        NSURLCache.setSharedURLCache(urlCache)
 
         // Register cell classes
-        collectionView!.registerClass(FeedCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView!.register(FeedCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         setupUI()
         
@@ -113,8 +113,8 @@ class FeedController: UICollectionViewController, AlertMessage {
         checkUserLoggedIn()
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     func setupViews() {
@@ -128,17 +128,17 @@ class FeedController: UICollectionViewController, AlertMessage {
         
         view.addConstraintWithFormat("H:|[v0]|", views: postContentView)
         
-        statusTextHeightConstraint = NSLayoutConstraint(item: postContentView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 53.0)
+        statusTextHeightConstraint = NSLayoutConstraint(item: postContentView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 53.0)
         
         view.addConstraint(statusTextHeightConstraint!)
         
-        let postContentViewTopConstraint = NSLayoutConstraint(item: postContentView, attribute: .Top, relatedBy: .Equal, toItem: topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
+        let postContentViewTopConstraint = NSLayoutConstraint(item: postContentView, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         view.addConstraint(postContentViewTopConstraint)
         
         view.addConstraintWithFormat("H:|[v0]|", views: collectionView!)
         view.addConstraintWithFormat("V:[v0][v1]", views: postContentView, collectionView!)
         
-        let bottomContraint = NSLayoutConstraint(item: collectionView!, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0.0)
+        let bottomContraint = NSLayoutConstraint(item: collectionView!, attribute: .bottom, relatedBy: .equal, toItem: self.bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         view.addConstraint(bottomContraint)
         
@@ -149,8 +149,8 @@ class FeedController: UICollectionViewController, AlertMessage {
         postContentView.addConstraintWithFormat("V:|-[v0(40)]", views: postButton)
         postContentView.addConstraintWithFormat("V:|-[v0(40)]", views: photoButton)
         
-        let photoImageViewCenterXConstraint = NSLayoutConstraint(item: photoImageView, attribute: .CenterX, relatedBy: .Equal, toItem: photoButton, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
-        let photoImageViewCenterYConstraint = NSLayoutConstraint(item: photoImageView, attribute: .CenterY, relatedBy: .Equal, toItem: photoButton, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        let photoImageViewCenterXConstraint = NSLayoutConstraint(item: photoImageView, attribute: .centerX, relatedBy: .equal, toItem: photoButton, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        let photoImageViewCenterYConstraint = NSLayoutConstraint(item: photoImageView, attribute: .centerY, relatedBy: .equal, toItem: photoButton, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         
         postContentView.addConstraints([photoImageViewCenterXConstraint, photoImageViewCenterYConstraint])
         
@@ -164,14 +164,14 @@ class FeedController: UICollectionViewController, AlertMessage {
     
     func setupUI() {
         
-        navigationController?.navigationBar.barStyle = .BlackTranslucent
+        navigationController?.navigationBar.barStyle = .blackTranslucent
         
         navigationItem.title = "Home"
         
         collectionView?.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         collectionView?.alwaysBounceVertical = true
         
-        let logoutButton = UIBarButtonItem(title: "Logout", style: .Plain, target: self, action: #selector(FeedController.handleLogout))
+        let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(FeedController.handleLogout))
         navigationItem.leftBarButtonItem = logoutButton
     }
     
@@ -184,7 +184,7 @@ class FeedController: UICollectionViewController, AlertMessage {
             try FIRAuth.auth()?.signOut()
             
             let loginController = LoginController()
-            presentViewController(loginController, animated: true, completion: nil)
+            present(loginController, animated: true, completion: nil)
             
         } catch let error as NSError {
             showAlert(viewController: self, title: oopsTitle, message: error.localizedDescription, buttonTitle: okTitle)
@@ -194,7 +194,7 @@ class FeedController: UICollectionViewController, AlertMessage {
     func checkUserLoggedIn() {
         
         if FIRAuth.auth()?.currentUser?.uid == nil {
-            performSelector(#selector(FeedController.handleLogout), withObject: nil, afterDelay: 0.0)
+            perform(#selector(FeedController.handleLogout), with: nil, afterDelay: 0.0)
         } else {
             
             loadProfile()
@@ -203,7 +203,7 @@ class FeedController: UICollectionViewController, AlertMessage {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     
         checkUserLoggedIn()
@@ -211,7 +211,7 @@ class FeedController: UICollectionViewController, AlertMessage {
     
     func loadProfile() {
 
-        let profileImageView = UIImageView(frame: CGRectMake(0.0, 0.0, 40.0, 40.0))
+        let profileImageView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
         profileImageView.image = UIImage(named: "user")
         profileImageView.layer.cornerRadius = 20.0
         profileImageView.layer.masksToBounds = true
@@ -221,24 +221,18 @@ class FeedController: UICollectionViewController, AlertMessage {
 
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             
-            userReference.child(uid).observeEventType(.Value, withBlock: { (snapshot: FIRDataSnapshot) in
+            userReference.child(uid).observe(.value, with: { (snapshot: FIRDataSnapshot) in
                 
                 let user = User(snapshot: snapshot)
                 
                 self.user = user
                 
                 //enable post button
-                self.postButton.enabled = true
-                self.photoButton.enabled = true
+                self.postButton.isEnabled = true
+                self.photoButton.isEnabled = true
                 
-                if let profileImageURL: String = user.profileImageURL {
-                    
-                    if profileImageURL != "" {
-                        profileImageView.loadImageUsingCacheWithUrlString(profileImageURL)
-                    }
-                    
-                } else {
-                    profileImageView.image = UIImage(named: "user")
+                if user.profileImageURL != "" {
+                    profileImageView.loadImageUsingCacheWithUrlString(user.profileImageURL)
                 }
             })
         }
@@ -247,7 +241,7 @@ class FeedController: UICollectionViewController, AlertMessage {
     
     func loadFeed() {
         
-        FIRDatabase.database().reference().child("blabs").observeEventType(.Value, withBlock: { (snapshot) in
+        FIRDatabase.database().reference().child("blabs").observe(.value, with: { (snapshot) in
             
             var newBlabs = [Blab]()
             
@@ -256,7 +250,7 @@ class FeedController: UICollectionViewController, AlertMessage {
                 newBlabs.append(blabObject)
             }
             
-            self.blabs = newBlabs.reverse()
+            self.blabs = newBlabs.reversed()
 
         })
     }
@@ -267,7 +261,7 @@ class FeedController: UICollectionViewController, AlertMessage {
         
         if let uid = FIRAuth.auth()?.currentUser?.uid { //make sure we have user id before querying
             
-            FIRDatabase.database().reference().child("blabs").queryOrderedByChild("user/uid").queryEqualToValue(uid).queryLimitedToLast(limitNumberOfBlabs).observeEventType(.Value, withBlock: { (snapshot) in
+            FIRDatabase.database().reference().child("blabs").queryOrdered(byChild: "user/uid").queryEqual(toValue: uid).queryLimited(toLast: limitNumberOfBlabs).observe(.value, with: { (snapshot) in
                 
                 var newBlabs = [Blab]()
                 
@@ -276,7 +270,7 @@ class FeedController: UICollectionViewController, AlertMessage {
                     newBlabs.append(blabObject)
                 }
                 
-                self.blabs = newBlabs.reverse()
+                self.blabs = newBlabs.reversed()
             })
         }
     }
@@ -287,23 +281,23 @@ class FeedController: UICollectionViewController, AlertMessage {
     
     // MARK: UICollectionViewDataSource
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return blabs.count
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! FeedCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FeedCell
     
-        cell.blab = blabs[indexPath.row]
+        cell.blab = blabs[(indexPath as NSIndexPath).row]
         return cell
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
         
 //        collectionView?.reloadData()
@@ -311,49 +305,49 @@ class FeedController: UICollectionViewController, AlertMessage {
 }
 
 extension FeedController: UICollectionViewDelegateFlowLayout {
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        var blab = blabs[indexPath.row]
+        var blab = blabs[(indexPath as NSIndexPath).row]
         
-        let rect = NSString(string: blab.statusText).boundingRectWithSize(CGSizeMake(collectionView.frame.width, 3000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(14.0)], context: nil)
+        let rect = NSString(string: blab.statusText).boundingRect(with: CGSize(width: collectionView.frame.width, height: 3000), options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14.0)], context: nil)
         var height = rect.height + 5.0 + 12.0 + 50.0
         
         blab.statusTextHeight = rect.height + 5.0
         
-        blabs[indexPath.row] = blab
+        blabs[(indexPath as NSIndexPath).row] = blab
         
         if blab.statusPhoto != "" {
             height += view.frame.width + 5.0
         }
         
-        return CGSizeMake(view.frame.width, height)
+        return CGSize(width: view.frame.width, height: height)
     }
 }
 
 extension FeedController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handlePost()
         return true
     }
 }
 
 extension FeedController: UITextViewDelegate {
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         changeTextViewConstraints(textView)
         
         return true
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         
         changeTextViewConstraints(textView)
     }
     
-    func changeTextViewConstraints(textView: UITextView) {
+    func changeTextViewConstraints(_ textView: UITextView) {
         let oldSize = textView.frame.size
         
-        let newSize = textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.max))
+        let newSize = textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude))
         
         let diff = newSize.height - oldSize.height
         
@@ -362,18 +356,18 @@ extension FeedController: UITextViewDelegate {
         statusTextHeightConstraint?.constant = newHeight > 53.0 ? newHeight > 150.0 ? 150.0 : newHeight : 53.0
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.textColor == UIColor.lightGrayColor() {
+        if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = UIColor.blackColor()
+            textView.textColor = UIColor.black
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = statusPlaceholder
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
 }

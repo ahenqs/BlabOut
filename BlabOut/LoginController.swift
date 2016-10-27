@@ -20,7 +20,7 @@ class LoginController: UIViewController, AlertMessage {
     let backgroundView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "city")
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -33,50 +33,50 @@ class LoginController: UIViewController, AlertMessage {
     let welcomeTextLabel: UILabel = {
         let label = UILabel()
         label.font = Font.bigBoldLabel
-        label.textColor = UIColor.whiteColor()
+        label.textColor = UIColor.white
         label.text = "Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur et."
         label.numberOfLines = 0
-        label.textAlignment = .Center
-        label.lineBreakMode = .ByWordWrapping
+        label.textAlignment = .center
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     
     lazy var nameTextfield: UITextField = {
         let textfield = UITextField()
-        textfield.borderStyle = .None
+        textfield.borderStyle = .none
         textfield.font = Font.textfield
-        textfield.backgroundColor = UIColor.whiteColor()
-        textfield.leftViewMode = .Always
+        textfield.backgroundColor = UIColor.white
+        textfield.leftViewMode = .always
         textfield.leftView = textfield.spacerView()
         textfield.placeholder = "Name"
-        textfield.autocorrectionType = .No
+        textfield.autocorrectionType = .no
         textfield.delegate = self
-        textfield.hidden = true
+        textfield.isHidden = true
         return textfield
     }()
     
     lazy var emailTextfield: UITextField = {
         let textfield = UITextField()
-        textfield.borderStyle = .None
+        textfield.borderStyle = .none
         textfield.font = Font.textfield
-        textfield.backgroundColor = UIColor.whiteColor()
-        textfield.leftViewMode = .Always
+        textfield.backgroundColor = UIColor.white
+        textfield.leftViewMode = .always
         textfield.leftView = textfield.spacerView()
         textfield.placeholder = "E-mail"
-        textfield.autocorrectionType = .No
-        textfield.autocapitalizationType = .None
+        textfield.autocorrectionType = .no
+        textfield.autocapitalizationType = .none
         textfield.delegate = self
-        textfield.keyboardType = .EmailAddress
+        textfield.keyboardType = .emailAddress
         return textfield
     }()
     
     lazy var passwordTextfield: UITextField = {
         let textfield = UITextField()
-        textfield.borderStyle = .None
+        textfield.borderStyle = .none
         textfield.font = Font.textfield
-        textfield.secureTextEntry = true
-        textfield.backgroundColor = UIColor.whiteColor()
-        textfield.leftViewMode = .Always
+        textfield.isSecureTextEntry = true
+        textfield.backgroundColor = UIColor.white
+        textfield.leftViewMode = .always
         textfield.leftView = textfield.spacerView()
         textfield.placeholder = "Password"
         textfield.delegate = self
@@ -84,21 +84,21 @@ class LoginController: UIViewController, AlertMessage {
     }()
     
     lazy var continueButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("Sign in", forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("Sign in", for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.backgroundColor = UIColor.appBlue()
-        button.addTarget(self, action: #selector(LoginController.handleLogin(_:)), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(LoginController.handleLogin(_:)), for: .touchUpInside)
         return button
     }()
     
     lazy var operationButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("Not registered yet? Sign up now!", forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("Not registered yet? Sign up now!", for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = Font.mediumBoldLabel
-        button.backgroundColor = UIColor.clearColor()
-        button.addTarget(self, action: #selector(LoginController.toggleLoginType(_:)), forControlEvents: .TouchUpInside)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(LoginController.toggleLoginType(_:)), for: .touchUpInside)
         return button
     }()
     
@@ -111,17 +111,17 @@ class LoginController: UIViewController, AlertMessage {
     lazy var pictureContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.8)
-        view.hidden = true
-        view.userInteractionEnabled = true
+        view.isHidden = true
+        view.isUserInteractionEnabled = true
         return view
     }()
     
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .ScaleAspectFit
-        imageView.backgroundColor = UIColor.clearColor()
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = UIColor.clear
         imageView.image = UIImage(named: "user")
-        imageView.userInteractionEnabled = true
+        imageView.isUserInteractionEnabled = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(LoginController.showImagePicker))
         tap.numberOfTapsRequired = 1
@@ -131,23 +131,23 @@ class LoginController: UIViewController, AlertMessage {
     }()
     
     lazy var validatePictureButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("OK, sign up now", forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("OK, sign up now", for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.backgroundColor = UIColor.appBlue()
         button.layer.cornerRadius = 8.0
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(LoginController.handleRegistrationWithImage), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(LoginController.handleRegistrationWithImage), for: .touchUpInside)
         return button
     }()
     
     lazy var cancelButton: UIButton = {
-        let button = UIButton(type: .Custom)
-        button.setTitle("Cancel", forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setTitle("Cancel", for: UIControlState())
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = Font.mediumBoldLabel
-        button.backgroundColor = UIColor.clearColor()
-        button.addTarget(self, action: #selector(LoginController.hideProfilePictureContainerView), forControlEvents: .TouchUpInside)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(LoginController.hideProfilePictureContainerView), for: .touchUpInside)
         return button
     }()
     
@@ -165,15 +165,15 @@ class LoginController: UIViewController, AlertMessage {
         addKeyboardListeners()
     }
 
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     func setupViews() {
         
         navigationItem.title = "Welcome"
         
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         
         view.addSubview(backgroundView)
         view.addSubview(darkBackgroundView)
@@ -211,10 +211,10 @@ class LoginController: UIViewController, AlertMessage {
 
         view.addConstraintWithFormat("V:|-(100@100)-[v0(80@250)]-20-[v1(44)]-8-[v2(==v1)]-8-[v3(==v2)]-8-[v4(50)]-12-[v5(44)]", views: welcomeTextLabel, nameTextfield, emailTextfield, passwordTextfield, continueButton, operationButton)
         
-        let constraint = NSLayoutConstraint(item: spacerForKeyboard, attribute: .Top, relatedBy: .Equal, toItem: operationButton, attribute: .Bottom, multiplier: 1.0, constant: -4.0)
+        let constraint = NSLayoutConstraint(item: spacerForKeyboard, attribute: .top, relatedBy: .equal, toItem: operationButton, attribute: .bottom, multiplier: 1.0, constant: -4.0)
         view.addConstraint(constraint)
         
-        bottomConstraint = NSLayoutConstraint(item: spacerForKeyboard, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: -3.0)
+        bottomConstraint = NSLayoutConstraint(item: spacerForKeyboard, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -3.0)
         view.addConstraint(bottomConstraint!)
         
         
@@ -222,10 +222,10 @@ class LoginController: UIViewController, AlertMessage {
         view.addConstraintWithFormat("H:|[v0]|", views: pictureContainerView)
         view.addConstraintWithFormat("V:|[v0]|", views: pictureContainerView)
         
-        let pictureCenterXContraint = NSLayoutConstraint(item: profileImageView, attribute: .CenterX, relatedBy: .Equal, toItem: pictureContainerView, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let pictureCenterXContraint = NSLayoutConstraint(item: profileImageView, attribute: .centerX, relatedBy: .equal, toItem: pictureContainerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         pictureContainerView.addConstraint(pictureCenterXContraint)
         
-        let pictureCenterYContraint = NSLayoutConstraint(item: profileImageView, attribute: .CenterY, relatedBy: .Equal, toItem: pictureContainerView, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        let pictureCenterYContraint = NSLayoutConstraint(item: profileImageView, attribute: .centerY, relatedBy: .equal, toItem: pictureContainerView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         pictureContainerView.addConstraint(pictureCenterYContraint)
         
         pictureContainerView.addConstraintWithFormat("H:[v0(200)]", views: profileImageView)
@@ -233,17 +233,17 @@ class LoginController: UIViewController, AlertMessage {
         
         pictureContainerView.addConstraintWithFormat("V:[v0(50)]", views: validatePictureButton)
         
-        let validateButtonCenterXContraint = NSLayoutConstraint(item: validatePictureButton, attribute: .CenterX, relatedBy: .Equal, toItem: pictureContainerView, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let validateButtonCenterXContraint = NSLayoutConstraint(item: validatePictureButton, attribute: .centerX, relatedBy: .equal, toItem: pictureContainerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         pictureContainerView.addConstraint(validateButtonCenterXContraint)
         
         pictureContainerView.addConstraintWithFormat("H:[v0(200)]", views: progressBar)
         pictureContainerView.addConstraintWithFormat("H:[v0(200)]", views: validatePictureButton)
         pictureContainerView.addConstraintWithFormat("H:[v0(==v1)]", views: cancelButton, validatePictureButton)
         
-        let cancelButtonCenterXConstraint = NSLayoutConstraint(item: cancelButton, attribute: .CenterX, relatedBy: .Equal, toItem: validatePictureButton, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let cancelButtonCenterXConstraint = NSLayoutConstraint(item: cancelButton, attribute: .centerX, relatedBy: .equal, toItem: validatePictureButton, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         pictureContainerView.addConstraint(cancelButtonCenterXConstraint)
         
-        let progressBarCenterXConstraint = NSLayoutConstraint(item: progressBar, attribute: .CenterX, relatedBy: .Equal, toItem: pictureContainerView, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let progressBarCenterXConstraint = NSLayoutConstraint(item: progressBar, attribute: .centerX, relatedBy: .equal, toItem: pictureContainerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         pictureContainerView.addConstraint(progressBarCenterXConstraint)
 
         pictureContainerView.addConstraintWithFormat("V:[v0]-[v1]-[v2]-24-[v3]", views: profileImageView, progressBar, validatePictureButton, cancelButton)
@@ -255,22 +255,22 @@ class LoginController: UIViewController, AlertMessage {
     }
     
     func addKeyboardListeners() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginController.animateWithKeyboard(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginController.animateWithKeyboard(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginController.animateWithKeyboard(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginController.animateWithKeyboard(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func animateWithKeyboard(notification: NSNotification) {
+    func animateWithKeyboard(_ notification: Notification) {
 
-        if let userInfo = notification.userInfo {
-            let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
+        if let userInfo = (notification as NSNotification).userInfo {
+            let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
             let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
             let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-            let moveUp = (notification.name == UIKeyboardWillShowNotification)
+            let moveUp = (notification.name == NSNotification.Name.UIKeyboardWillShow)
             
             bottomConstraint?.constant = moveUp ? -keyboardHeight : -3.0
             
             let options = UIViewAnimationOptions(rawValue: curve << 16)
-            UIView.animateWithDuration(duration, delay: 0, options: options,
+            UIView.animate(withDuration: duration, delay: 0, options: options,
                                        animations: {
                                         self.view.layoutIfNeeded()
                 },
@@ -281,7 +281,7 @@ class LoginController: UIViewController, AlertMessage {
 }
 
 extension LoginController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         hideKeyboard()
         return true
     }

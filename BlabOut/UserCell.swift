@@ -27,10 +27,10 @@ class UserCell: UITableViewCell {
     var hasFollowed = false {
         didSet {
             if self.hasFollowed {
-                actionButton.setTitle("Unfollow", forState: .Normal)
-                actionButton.backgroundColor = UIColor.darkGrayColor()
+                actionButton.setTitle("Unfollow", for: UIControlState())
+                actionButton.backgroundColor = UIColor.darkGray
             } else {
-                actionButton.setTitle("Follow", forState: .Normal)
+                actionButton.setTitle("Follow", for: UIControlState())
                 actionButton.backgroundColor = UIColor.appOrange()
             }
         }
@@ -38,7 +38,7 @@ class UserCell: UITableViewCell {
     
     let photoImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .ScaleAspectFill
+        view.contentMode = .scaleAspectFill
         view.layer.cornerRadius = 20.0
         view.layer.masksToBounds = true
         view.image = UIImage(named: "user")
@@ -47,20 +47,20 @@ class UserCell: UITableViewCell {
     
     let usernameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFontOfSize(14.0)
+        label.font = UIFont.boldSystemFont(ofSize: 14.0)
         label.textColor = UIColor.appBlue()
         return label
     }()
     
     lazy var actionButton: UIButton = {
-        let button = UIButton(type: .Custom)
+        let button = UIButton(type: .custom)
         button.backgroundColor = UIColor.appOrange()
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.setTitleColor(UIColor.white, for: UIControlState())
         button.titleLabel?.font = Font.smallBoldLabel
-        button.setTitle("Follow", forState: .Normal)
+        button.setTitle("Follow", for: UIControlState())
         button.layer.cornerRadius = 5.0
         button.layer.masksToBounds = true
-        button.addTarget(self, action: #selector(UserCell.handleTapAction(_:)), forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(UserCell.handleTapAction(_:)), for: .touchUpInside)
         return button
     }()
     
@@ -70,7 +70,7 @@ class UserCell: UITableViewCell {
         
         self.separatorInset = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
         self.layoutMargins = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0)
-        self.selectionStyle = .None
+        self.selectionStyle = .none
         
         setupViews()
     }
@@ -91,7 +91,7 @@ class UserCell: UITableViewCell {
         addConstraintWithFormat("V:|-10-[v0(30)]", views: actionButton)
     }
     
-    @IBAction func handleTapAction(sender: UIButton) {
+    @IBAction func handleTapAction(_ sender: UIButton) {
         
         if let usr = user {
             delegate?.didTapActionButton(usr, sender: sender)

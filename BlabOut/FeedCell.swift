@@ -14,11 +14,11 @@ class FeedCell: UICollectionViewCell {
         didSet {
             statusTextLabel.text = blab?.statusText
             
-            let formatter = NSDateFormatter()
-            formatter.dateStyle = NSDateFormatterStyle.LongStyle
-            formatter.timeStyle = .MediumStyle
+            let formatter = DateFormatter()
+            formatter.dateStyle = DateFormatter.Style.long
+            formatter.timeStyle = .medium
             
-            detailLabel.text = formatter.stringFromDate((blab?.timestamp)!)
+            detailLabel.text = formatter.string(from: (blab?.timestamp)! as Date)
             usernameLabel.text = blab?.user!.name
             
             setupConstraints()
@@ -37,7 +37,7 @@ class FeedCell: UICollectionViewCell {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 20.0
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(named: "user")
@@ -46,38 +46,38 @@ class FeedCell: UICollectionViewCell {
     
     let usernameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFontOfSize(14.0)
+        label.font = UIFont.boldSystemFont(ofSize: 14.0)
         label.textColor = UIColor.appBlue()
         return label
     }()
     
     let statusTextLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFontOfSize(14.0)
-        label.textColor = UIColor.grayColor()
+        label.font = UIFont.systemFont(ofSize: 14.0)
+        label.textColor = UIColor.gray
         label.numberOfLines = 0
-        label.textAlignment = .Justified
+        label.textAlignment = .justified
         return label
     }()
     
     let detailLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFontOfSize(11.0)
-        label.textColor = UIColor.lightGrayColor()
+        label.font = UIFont.systemFont(ofSize: 11.0)
+        label.textColor = UIColor.lightGray
         return label
     }()
     
     let statusPhotoView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .ScaleAspectFill
-        view.hidden = true
+        view.contentMode = .scaleAspectFill
+        view.isHidden = true
         view.layer.masksToBounds = true
         return view
     }()
     
     func setupViews() {
         
-        backgroundColor = UIColor.whiteColor()
+        backgroundColor = UIColor.white
         addSubview(profileImageView)
         addSubview(usernameLabel)
         addSubview(statusTextLabel)
@@ -100,14 +100,14 @@ class FeedCell: UICollectionViewCell {
         }
         
         if blab?.statusPhoto != "" {
-            statusPhotoView.hidden = false
+            statusPhotoView.isHidden = false
             addConstraintWithFormat("H:|[v0]|", views: statusPhotoView)
             addConstraintWithFormat("V:|-[v0(40)]-[v1(\((blab?.statusTextHeight)!))]-[v2(\(self.frame.width))]", views: profileImageView ,statusTextLabel, statusPhotoView)
             
-            statusPhotoView.loadImageUsingCacheWithUrlString((blab?.statusPhoto)!, style: .Gray)
+            statusPhotoView.loadImageUsingCacheWithUrlString((blab?.statusPhoto)!, style: .gray)
             
         } else {
-            statusPhotoView.hidden = true
+            statusPhotoView.isHidden = true
             addConstraintWithFormat("V:|-[v0(40)]-[v1(\((blab?.statusTextHeight)!))]", views: profileImageView ,statusTextLabel)
         }
         

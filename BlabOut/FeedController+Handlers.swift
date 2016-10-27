@@ -14,7 +14,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func resetStatus() {
         self.statusTextfield.text = statusPlaceholder
-        self.statusTextfield.textColor = UIColor.lightGrayColor()
+        self.statusTextfield.textColor = UIColor.lightGray
         self.statusTextHeightConstraint?.constant = 53.0
     }
     
@@ -22,12 +22,12 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         
         hideKeyboard()
         
-        postButton.enabled = false
-        photoButton.enabled = false
+        postButton.isEnabled = false
+        photoButton.isEnabled = false
         
-        if statusTextfield.text?.characters.count == 0 || statusTextfield.textColor == UIColor.lightGrayColor() {
-            postButton.enabled = true
-            photoButton.enabled = true
+        if statusTextfield.text?.characters.count == 0 || statusTextfield.textColor == UIColor.lightGray {
+            postButton.isEnabled = true
+            photoButton.isEnabled = true
             
             showAlert(viewController: self, title: oopsTitle, message: "Invalid data to post.", buttonTitle: okTitle)
             
@@ -35,8 +35,8 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         }
         
         guard let status = statusTextfield.text else {
-            postButton.enabled = true
-            photoButton.enabled = true
+            postButton.isEnabled = true
+            photoButton.isEnabled = true
             
             showAlert(viewController: self, title: oopsTitle, message: "Invalid data to post.", buttonTitle: okTitle)
             
@@ -47,10 +47,10 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
             
             if let image = photoImageView.image {
                 self.progressBar.setProgress(0.0, animated: false)
-                self.progressBar.hidden = false
+                self.progressBar.isHidden = false
                 
                 //upload image
-                let uniqueID = NSUUID().UUIDString
+                let uniqueID = UUID().uuidString
                 let randomValue   = Int(arc4random_uniform(UInt32(999999)))
                 let uniqueImageID = "\(uniqueID)-\(randomValue).png"
                 
@@ -58,92 +58,91 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                 
                 if let uploadImageData = UIImagePNGRepresentation(image) {
                     
-                    let task = storageReference.putData(uploadImageData, metadata: nil, completion: { (metadata, error) in
+                    let task = storageReference.put(uploadImageData, metadata: nil, completion: { (metadata, error) in
                         
                         //image uploaded successfully
                         if error == nil {
                             
                             if let imageURL = metadata?.downloadURL()?.absoluteString {
                                 
-                                if let blab: Blab = Blab(user: loggedInUser, text: status, photo: imageURL) {
+                                let blab: Blab = Blab(user: loggedInUser, text: status, photo: imageURL)
                                     
-                                    self.blabReference.childByAutoId().updateChildValues(blab.toAnyObject()) { (error, reference) in
+                                self.blabReference.childByAutoId().updateChildValues(blab.toAnyObject()) { (error, reference) in
+                                    
+                                    let blabID = reference.key
+                                    
+                                    self.postButton.isEnabled = true
+                                    self.photoButton.isEnabled = true
+                                    
+                                    if error != nil {
+                                        self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
                                         
-                                        let blabID = reference.key
+                                        return
+                                    }
+                                    
+                                    let currentUID = FIRAuth.auth()?.currentUser?.uid
+                                    
+                                    //update my feed with my blab
+                                    
+                                    self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
                                         
-                                        self.postButton.enabled = true
-                                        self.photoButton.enabled = true
-                                        
-                                        if error != nil {
-                                            self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
-                                            
+                                        if err1 != nil {
+                                            self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
                                             return
                                         }
                                         
-                                        let currentUID = FIRAuth.auth()?.currentUser?.uid
+                                        // TODO: update followers' feeds
                                         
-                                        //update my feed with my blab
-                                        
-                                        self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
+                                        self.userReference.child(currentUID!).child("followers").observeSingleEvent(of: .value, with: { (shot) in
                                             
-                                            if err1 != nil {
-                                                self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
-                                                return
-                                            }
+                                            var followers = [UserUID]()
                                             
-                                            // TODO: update followers' feeds
-                                            
-                                            self.userReference.child(currentUID!).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                                            if shot.childrenCount > 0 {
                                                 
-                                                var followers = [UserUID]()
+                                                let c = Connection(snapshot: shot)
                                                 
-                                                if shot.childrenCount > 0 {
+                                                followers = c.users
+                                                
+                                                if followers.count > 0 {
                                                     
-                                                    let c = Connection(snapshot: shot)
-                                                    
-                                                    followers = c.users
-                                                    
-                                                    if followers.count > 0 {
+                                                    for UID in followers {
                                                         
-                                                        for UID in followers {
+                                                        self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
                                                             
-                                                            self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
+                                                            if err != nil {
                                                                 
-                                                                if err != nil {
-                                                                    
-                                                                    self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
-                                                                    return
-                                                                }
-                                                                
-                                                                self.progressBar.hidden = true
-                                                                
-                                                                self.resetStatus()
-                                                                
-                                                                self.removePhoto()
-                                                            })
+                                                                self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
+                                                                return
+                                                            }
                                                             
-                                                        }
+                                                            self.progressBar.isHidden = true
+                                                            
+                                                            self.resetStatus()
+                                                            
+                                                            self.removePhoto()
+                                                        })
                                                         
                                                     }
-                                                } else {
-                                                    self.progressBar.hidden = true
                                                     
-                                                    self.resetStatus()
-                                                    
-                                                    self.removePhoto()
                                                 }
+                                            } else {
+                                                self.progressBar.isHidden = true
                                                 
-                                            })
+                                                self.resetStatus()
+                                                
+                                                self.removePhoto()
+                                            }
                                             
                                         })
-                                    }
+                                        
+                                    })
                                 }
                             }
                             
                         } else {
-                            self.progressBar.hidden = true
-                            self.postButton.enabled = true
-                            self.photoButton.enabled = true
+                            self.progressBar.isHidden = true
+                            self.postButton.isEnabled = true
+                            self.photoButton.isEnabled = true
                             
                             //no image due to error upload
                             self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
@@ -152,7 +151,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                     })
                     
                     // Add a progress observer to an upload task
-                    task.observeStatus(.Progress) { snapshot in
+                    task.observe(.progress) { snapshot in
                         // Upload reported progress
                         if let progress = snapshot.progress {
                             let percentComplete = Float(progress.completedUnitCount) / Float(progress.totalUnitCount)
@@ -160,76 +159,77 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
                             self.progressBar.setProgress(percentComplete, animated: true)
                             
                             if (percentComplete >= 1.0) {
-                                self.progressBar.hidden = true
+                                self.progressBar.isHidden = true
                             }
                         }
                     }
                 }
                 
             } else {
-                if let blab: Blab = Blab(user: loggedInUser, text: status) {
+                
+                let blab: Blab = Blab(user: loggedInUser, text: status)
                     
-                    blabReference.childByAutoId().updateChildValues(blab.toAnyObject()) { (error, reference) in
+                blabReference.childByAutoId().updateChildValues(blab.toAnyObject()) { (error, reference) in
+                    
+                    self.postButton.isEnabled = true
+                    self.photoButton.isEnabled = true
+                    
+                    if error != nil {
+                        self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
+                        return
+                    }
+                    
+                    let blabID = reference.key
+                    
+                    let currentUID = FIRAuth.auth()?.currentUser?.uid
+                    
+                    //update my feed with my blab
+                    
+                    self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
                         
-                        self.postButton.enabled = true
-                        self.photoButton.enabled = true
-                        
-                        if error != nil {
-                            self.showAlert(viewController: self, title: oopsTitle, message: (error?.localizedDescription)!, buttonTitle: okTitle)
+                        if err1 != nil {
+                            self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
                             return
                         }
                         
-                        let blabID = reference.key
+                        // TODO: update followers' feeds
                         
-                        let currentUID = FIRAuth.auth()?.currentUser?.uid
-                        
-                        //update my feed with my blab
-                        
-                        self.userReference.child(currentUID!).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err1, ref1) in
+                        self.userReference.child(currentUID!).child("followers").observeSingleEvent(of: .value, with: { (shot) in
                             
-                            if err1 != nil {
-                                self.showAlert(viewController: self, title: oopsTitle, message: (err1?.localizedDescription)!, buttonTitle: okTitle)
-                                return
-                            }
+                            var followers = [UserUID]()
                             
-                            // TODO: update followers' feeds
-                            
-                            self.userReference.child(currentUID!).child("followers").observeSingleEventOfType(.Value, withBlock: { (shot) in
+                            if shot.childrenCount > 0 {
                                 
-                                var followers = [UserUID]()
+                                let c = Connection(snapshot: shot)
                                 
-                                if shot.childrenCount > 0 {
+                                followers = c.users
+                                
+                                if followers.count > 0 {
                                     
-                                    let c = Connection(snapshot: shot)
-                                    
-                                    followers = c.users
-                                    
-                                    if followers.count > 0 {
+                                    for UID in followers {
                                         
-                                        for UID in followers {
+                                        self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
                                             
-                                            self.userReference.child(UID).child("feed").child(blabID).setValue(blab.toAnyObject(), withCompletionBlock: { (err, r) in
-                                                
-                                                if err != nil {
-                                                    self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
-                                                    return
-                                                }
-                                                
-                                                self.resetStatus()
-                                            })
+                                            if err != nil {
+                                                self.showAlert(viewController: self, title: oopsTitle, message: (err?.localizedDescription)!, buttonTitle: okTitle)
+                                                return
+                                            }
                                             
-                                        }
+                                            self.resetStatus()
+                                        })
                                         
                                     }
-                                } else {
-                                    self.resetStatus()
+                                    
                                 }
-                                
-                            })
+                            } else {
+                                self.resetStatus()
+                            }
                             
                         })
-                    }
+                        
+                    })
                 }
+                
             }
         }
     }
@@ -240,7 +240,7 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        self.present(imagePicker, animated: true, completion: nil)
     }
 
     
@@ -259,15 +259,15 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func removePhoto() {
         photoImageView.image = nil
-        photoImageView.hidden = true
-        photoButton.setTitle("Photo", forState: .Normal)
+        photoImageView.isHidden = true
+        photoButton.setTitle("Photo", for: UIControlState())
         photoButton.backgroundColor = UIColor.appOrange()
         photoButton.layer.cornerRadius = 8.0
     }
     
     // MARK: Image picker
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         var selectedImageFromPicker: UIImage?
         
@@ -281,17 +281,17 @@ extension FeedController: UIImagePickerControllerDelegate, UINavigationControlle
         if let selectedImage = selectedImageFromPicker {
             photoImageView.image = selectedImage
             
-            photoImageView.hidden = false
-            photoButton.setTitle("Cancel", forState: .Normal)
+            photoImageView.isHidden = false
+            photoButton.setTitle("Cancel", for: UIControlState())
             photoButton.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
             photoButton.layer.cornerRadius = 0.0
             
         }
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }

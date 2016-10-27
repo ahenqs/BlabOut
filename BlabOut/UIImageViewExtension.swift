@@ -9,28 +9,28 @@
 import Foundation
 import UIKit
 
-let imageCache = NSCache()
+let imageCache = NSCache<AnyObject, AnyObject>()
 
 extension UIImageView {
     
-    func loadImageUsingCacheWithUrlString(urlString: String, style: UIActivityIndicatorViewStyle = .White) {
+    func loadImageUsingCacheWithUrlString(_ urlString: String, style: UIActivityIndicatorViewStyle = .white) {
         
         addActivityIndicator(style)
         
         self.image = UIImage(named: "photo")
         
         //search for image in cache
-        if let cachedImage = imageCache.objectForKey(urlString) as? UIImage {
+        if let cachedImage = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
             self.removeActivityIndicator()
             self.image = cachedImage
             return
         }
         
         //loads image from url
-        let url = NSURL(string: urlString)
-        NSURLSession.sharedSession().dataTaskWithURL(url!, completionHandler: { (data, response, error) in
+        let url = URL(string: urlString)
+        URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
             
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 
                 //download hit an error so lets return out
                 if error != nil {
@@ -42,7 +42,7 @@ extension UIImageView {
                 self.removeActivityIndicator()
                 
                 if let downloadedImage = UIImage(data: data!) {
-                    imageCache.setObject(downloadedImage, forKey: urlString)
+                    imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
                     self.image = downloadedImage
                 }
             })
@@ -50,7 +50,7 @@ extension UIImageView {
         }).resume()
     }
     
-    private func addActivityIndicator(style: UIActivityIndicatorViewStyle = .White) {
+    fileprivate func addActivityIndicator(_ style: UIActivityIndicatorViewStyle = .white) {
 //        let indicator = UIActivityIndicatorView(activityIndicatorStyle: style)
 //        indicator.translatesAutoresizingMaskIntoConstraints = false
 //        indicator.startAnimating()
@@ -64,7 +64,7 @@ extension UIImageView {
 //        self.addConstraint(yConstraint)
     }
     
-    private func removeActivityIndicator() {
+    fileprivate func removeActivityIndicator() {
 //        self.removeConstraints(self.constraints)
 //        let indicator = self.viewWithTag(99) as! UIActivityIndicatorView
 //        indicator.stopAnimating()

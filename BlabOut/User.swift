@@ -31,13 +31,13 @@ struct User: Mappable {
         uid = snapshot.key
         itemReference = snapshot.ref
         
-        if let username = snapshot.value![kName] as? String {
+        if let dict = snapshot.value! as? NSDictionary, let username = dict[kName] as? String {
             name = username
         } else {
             name = ""
         }
         
-        if let url = snapshot.value![kProfileImageURL] as? String {
+        if let dict = snapshot.value! as? NSDictionary, let url = dict[kProfileImageURL] as? String {
             profileImageURL = url
         } else {
             profileImageURL = ""
@@ -45,7 +45,7 @@ struct User: Mappable {
     }
     
     func toAnyObject() -> [String : AnyObject] {
-        return [kUID: self.uid, kName: self.name, kProfileImageURL: self.profileImageURL]
+        return [kUID: self.uid as AnyObject, kName: self.name as AnyObject, kProfileImageURL: self.profileImageURL as AnyObject]
     }
     
 }
